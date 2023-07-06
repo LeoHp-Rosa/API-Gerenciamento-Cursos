@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 
 class StatusChoice(models.TextChoices):
     NI = "Não iniciado"
@@ -14,3 +16,4 @@ class Courses(models.Model):
     )
     start_date = models.DateField()
     end_date = models.DateField()
+    users = models.ManyToManyField(User, related_name="courses")
