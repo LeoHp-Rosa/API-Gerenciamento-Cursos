@@ -8,5 +8,23 @@ class User(AbstractUser):
     is_instructor = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
-
     REQUIRED_FIELDS = []
+
+
+class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
+
+class Instructor(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
+
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        if instance.is_instructor:
+            Instructor.objects.create(user=instance)
+        else:
+            Student.objects.create(user=instance)
+
+
+models.signals.post_save.connect(create_user_profile, sender=User)

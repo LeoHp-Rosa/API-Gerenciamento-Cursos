@@ -14,3 +14,11 @@ class Courses(models.Model):
     )
     start_date = models.DateField()
     end_date = models.DateField()
+    instructor = models.ForeignKey(
+        "users.Instructor",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="instructor",
+    )
+    students = models.ManyToManyField("users.Student", related_name="student")

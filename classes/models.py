@@ -7,3 +7,4 @@ class Classes(models.Model):
     date = models.DateField()
     link = models.URLField(blank=True)
     status = models.BooleanField(default=False)
+    course = models.ForeignKey("courses.Courses", on_delete=models.CASCADE)
