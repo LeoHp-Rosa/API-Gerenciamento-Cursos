@@ -35,9 +35,13 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-MY_APPS = ["classes", "courses", "users",]
+MY_APPS = [
+    "classes",
+    "courses",
+    "users",
+]
 
-THIRD_PARTY_APPS = ["rest_framework"]
+THIRD_PARTY_APPS = ["rest_framework", "drf_spectacular"]
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -118,6 +122,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

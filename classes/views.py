@@ -5,6 +5,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.pagination import PageNumberPagination
 
 from courses.models import Courses
 from users.permissions import IsInstructor
@@ -34,7 +35,7 @@ class CreateClassesView(generics.CreateAPIView):
         serializer.save(course=course)
 
 
-class RetrieveUpdateDestroyClassesView(generics.RetrieveUpdateDestroyAPIView):
+class RetrieveUpdateDestroyClassesView(generics.RetrieveUpdateDestroyAPIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsInstructor]
     queryset = Classes.objects.all()
