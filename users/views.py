@@ -1,12 +1,15 @@
+from django.http import Http404
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from courses.models import Courses
 from courses.serializers import CoursesSerializer
 
 from .models import User
+from .permissions import IsInstructor
 from .serializers import UserSerializer
 
 
@@ -47,11 +50,38 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
             user.set_password(password)
 
         if not any(request_data.values()):
-            return Response(
-                {"message": "No allowed fields were provided."}, status=400
-            )
+            return Response({"message": "No allowed fields were provided."}, status=400)
 
         serializer = self.get_serializer(user, data=request_data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class StudentListView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.filter(is_instructor=False)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+
+        for student_data in data:
+            student = User.objects.get(pk=student_data["id"])
+            courses = Courses.objects.filter(students=student)
+            courses_serializer = CoursesSerializer(courses, many=True)
+            student_data["courses"] = courses_serializer.data
+
+        return Response(data)
+
+
+class InstructorStudentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsInstructor]
+    serializer_class = UserSerializer
+    queryset = User.objects.filter(is_instructor=False)
