@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from rest_framework.pagination import PageNumberPagination
 from classes.models import Classes
 from classes.serializers import ClassesSerializer
 from users.models import User
@@ -21,7 +21,7 @@ class CreateCourseView(generics.CreateAPIView):
     queryset = Courses.objects.all()
 
 
-class RetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class RetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsInstructor]
 
@@ -51,7 +51,7 @@ class RetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=204)
 
 
-class FilterCourseView(generics.RetrieveAPIView):
+class FilterCourseView(generics.RetrieveAPIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 

@@ -1,6 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -18,7 +19,7 @@ class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
 
 
-class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
