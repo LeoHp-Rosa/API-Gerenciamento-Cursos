@@ -2,6 +2,9 @@
 
 # API de Gerenciamento de Plataforma de Cursos
 
+##Documentação:
+https://endprojectdjango.onrender.com/api/docs/redoc/
+
 ## Introdução
 
 Esta API tem como objetivo gerenciar uma plataforma de cursos com seus devidos conteúdos.
